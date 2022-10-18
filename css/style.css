@@ -43,7 +43,32 @@ img{
 
 .blue{
     background-color: #2078D6;
+    border:3px solid #1a64b4;
+    border-style: inset;
+    
 }
 .red{
     background-color: red;
+    border:3px solid rgb(175, 0, 0);
+    border-style: inset;
+    background-image: url(../img/147841.svg);
+    background-size: 90%;
+    background-repeat: no-repeat;
+    background-position: center;
+    color: transparent;
+    
+}
+
+
+#error{
+    z-index: 900;
+    width: 500px;
+    height: 500px;
+    left: 50%;
+    top: 44.3%;
+    transform: translate(-50%, -50%);
+    position: absolute;
+}
+.bg-error{
+    background-color: rgba(0, 0, 0, 0.377);
 }

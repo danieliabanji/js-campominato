@@ -27,44 +27,45 @@ function play(){
     introText.classList.add('d-none');
 
     console.log('inizio il gioco....');
+
+    removeFirstNotification();
+    const loose = document.getElementById('error');
+    const win = document.getElementById('error');
+    loose.classList.add('d-none');
+    win.classList.add('d-none');
     const NUM_BOMB = 16;
-    const bombsPosition = [];
+    const bombsPosition = [];  
+    let score = 1;
+    let selettore;
+    
+    let scoretable = document.getElementById('punteggio');
+    scoretable.innerHTML= '';
 
-    let score = 0;
-
-    // let numCell;
+    // selezione del livello di difficoltà
+    let numCell;
     const fieldGame = document.getElementById('fieldGame');
     fieldGame.innerHTML = '';
     const levelInput = document.getElementById('livello');
     const level = levelInput.value;
-    
-    // selezione del livello di difficoltà
-    // switch(level){
-    //     case '1':
-    //     default:
-    //         numCell = 100;
-    //     break;
-    //     case '2':
-    //         numCell = 81;
-    //     break;
-    //     case '3':
-    //         numCell = 49;
-    //     break;
-    // }
-    // operatore ternario
-    const numCell = (level === 1) ? 100 : (level === 2) ? 81 : 49;
 
-    // funzioni che crea la bomba
-    while(bombsPosition.length < NUM_BOMB){
-        const bomb = randomNumber(1,numCell);
-        if(!bombsPosition.includes(bomb)){
-            bombsPosition.push(bomb);
-        }
+    
+    switch(level){
+        case '1':
+        default:
+            numCell = 100;
+        break;
+        case '2':
+            numCell = 81;
+        break;
+        case '3':
+            numCell = 49;
+        break;
     }
-    console.log(bombsPosition);
+    // operatore ternario
+    // const numCell = (level === 1) ? 100 : (level === 2) ? 81 : 49;
 
     const MAX_ATTEMPT = numCell - NUM_BOMB;
-
+    console.log(MAX_ATTEMPT)
    
     // funzione che crea la cella
     function drawCell(num){
@@ -77,34 +78,70 @@ function play(){
         cell.innerHTML = `
             <span>${num}</span>
         `;
-      
-       
-        if (bombsPosition.includes(num)) {
-            cell.classList.add('bomb');
-            cell.addEventListener('click', function () {
-                
-                const arrBomb = document.querySelectorAll('.bomb');
-                for (let i = 0; i < arrBomb.length; i++) {
 
-                    arrBomb[i].classList.add('red');
-                }
-                endGame();
-            });
-        } else {
-            cell.addEventListener('click', function () {
-                this.classList.add('blue');
-                score++;
-                console.log(score);
-                // this.removeEventListener('click');
-                if(score === MAX_ATTEMPT){
-                    endGame();
-                }
-                
-
-            });
+     // funzioni che crea la bomba
+    while(bombsPosition.length < NUM_BOMB){
+        const bomb = randomNumber(1,numCell);
+        if(!bombsPosition.includes(bomb)){
+            bombsPosition.push(bomb);
         }
-        return cell;
     }
+
+    // assegnazione variabile bombe
+     if(bombsPosition.includes(num)){
+        cell.classList.add('bomb');
+        // cell.innerHTML = '';
+    };
+      
+    // evento per cambiare il colore quando si seleziona una casella
+    cell.addEventListener('click', selettore = function noClick(){
+            
+        if(cell.classList.contains('bomb')){
+            const bombField = document.querySelectorAll('.bomb');
+            for (let i  = 0; i < bombField.length; i++){
+                bombField[i].classList.add('red');
+
+            };
+            cell.classList.add('red');
+            this.removeEventListener('click', noClick);
+            endGame();
+
+        }else{
+            this.removeEventListener('click', noClick);
+            this.classList.add('blue');
+            let highscore = score++;
+            console.log(score)
+            scoretable.innerHTML = 'Score: ' + highscore; 
+            console.log(highscore)
+            // endGame();
+        };
+    })
+
+
+    function endGame(){
+        const squares = document.getElementsByClassName('square');
+        for(let i = 0; i < squares.length; i ++){
+            squares[i].classList.add('blue');
+        }
+        if(score === MAX_ATTEMPT){
+            console.log('you win');
+            win.classList.remove('d-none');
+            const divAlert = notificationError('hai vinto!');
+            win.append(divAlert); 
+            
+            
+        }else{
+            console.log('you lose')
+            loose.classList.remove('d-none');
+            loose.classList.add('bg-error');
+            const divAlert = notificationError('hai perso!');
+            loose.append(divAlert);  
+        }
+    }
+    return cell;
+}
+
+console.log(bombsPosition);
 
     // funzione che crea il campo di gioco
     function drawGrid(){
@@ -119,17 +156,6 @@ function play(){
     }
     drawGrid();
 
-    function endGame (){
-        if(score === MAX_ATTEMPT){
-            console.log('hai vinto');
-            // stampare lo score
-
-        }else {
-            console.log('hai perso');
-            // stampare lo score
-
-        }
-    }
 }
 
 playButton.addEventListener('click', play);

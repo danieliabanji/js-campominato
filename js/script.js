@@ -64,7 +64,7 @@ function play(){
     // operatore ternario
     // const numCell = (level === 1) ? 100 : (level === 2) ? 81 : 49;
 
-    const MAX_ATTEMPT = numCell - NUM_BOMB;
+    const MAX_ATTEMPT = (numCell - NUM_BOMB) + 1;
     console.log(MAX_ATTEMPT)
    
     // funzione che crea la cella
@@ -113,7 +113,9 @@ function play(){
             console.log(score)
             scoretable.innerHTML = 'Score: ' + highscore; 
             console.log(highscore)
-            // endGame();
+            if(score === MAX_ATTEMPT){
+                endGame();
+            }
         };
     })
 
